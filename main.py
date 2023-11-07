@@ -1,3 +1,9 @@
+# Import configuration from config.py
+import config
+
+# Your main application logic
+print("Running the main application...")
+
 #import machine
 #import time
 #led = machine.Pin(2, machine.Pin.OUT)
