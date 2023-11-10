@@ -22,7 +22,7 @@ wheel_B1 = machine.Pin(12, machine.Pin.OUT); wheel_B1.value(0)
 wheel_B2 = machine.Pin(27, machine.Pin.OUT); wheel_B2.value(0)
 wheel_A1 = machine.Pin(13, machine.Pin.OUT); wheel_A1.value(0)
 wheel_A2 = machine.Pin(14, machine.Pin.OUT); wheel_A2.value(0)
-wheel_stby = machine.Pin(33, machine.Pin.OUT); wheel_stby.value(0)
+wheel_stby = machine.Pin(33, machine.Pin.OUT); wheel_stby.value(1)
 # endregion
 
 wheel_PWM_B.duty(1000)
