@@ -10,10 +10,11 @@ arev = machine.Pin(15, machine.Pin.OUT); arev.value(0)
 
 # PWM for motor wheels
 wheel_PWM_B = machine.PWM(machine.Pin(25))
-wheel_PWM_B.freq(1000)
+wheel_PWM_B.freq(20000)
 wheel_PWM_B.duty(0)
+
 wheel_PWM_A = machine.PWM(machine.Pin(26))
-wheel_PWM_A.freq(1000)
+wheel_PWM_A.freq(20000)
 wheel_PWM_A.duty(0)
 
 # Wheel initialization
@@ -24,8 +25,8 @@ wheel_A2 = machine.Pin(14, machine.Pin.OUT); wheel_A2.value(0)
 wheel_stby = machine.Pin(33, machine.Pin.OUT); wheel_stby.value(0)
 # endregion
 
-wheel_PWM_B.duty(512)
-wheel_PWM_A.duty(512)
+wheel_PWM_B.duty(1000)
+wheel_PWM_A.duty(1000)
 
 while 1:
     afwd.value(0)
