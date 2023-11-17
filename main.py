@@ -25,13 +25,6 @@ wheel_A2 = machine.Pin(14, machine.Pin.OUT); wheel_A2.value(0)
 wheel_stby = machine.Pin(33, machine.Pin.OUT); wheel_stby.value(1)
 # endregion
 
-wheel_PWM_B.duty(600)
-wheel_PWM_A.duty(1000)
-wheel_B1.value(0)
-wheel_B2.value(1)
-
-wheel_A1.value(0)
-wheel_A2.value(1)
 #while 1:
     # afwd.value(0)
     # arev.value(1)
