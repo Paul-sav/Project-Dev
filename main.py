@@ -3,6 +3,13 @@ import config
 import machine
 import time
 
+wheel_PWM_A.duty(700)
+wheel_PWM_A.duty(700)
+wheel_B1.value(1)
+wheel_B2.value(0)
+wheel_A1.value(0)
+wheel_A2.value(1)
+
 # region Pin settings for directions
 # Actuator Down
 # afwd.value(0)
