@@ -8,6 +8,7 @@ def setup_udp_server(port):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_socket.bind(('0.0.0.0', port))  # Bind to all available interfaces
     print(f"UDP server started on port {port}")
+    return server_socket  # Return the socket object
 
 
 def move_forward():
@@ -104,7 +105,7 @@ wheel_stby.value(1)
 # endregion
 
 UDP_PORT = 8080
-setup_udp_server(UDP_PORT)
+server_socket = setup_udp_server(UDP_PORT)
 
 while True:
     data, addr = server_socket.recvfrom(1024)
