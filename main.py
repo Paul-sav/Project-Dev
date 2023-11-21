@@ -128,7 +128,10 @@ while True:
         udp.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         response_data = str(addr[0]).encode()
         response_address = ('<broadcast>', UDP_PORT)
-        udp.sendto(response_data, response_address)
+        try:
+            udp.sendto(response_data, response_address)
+        except Exception as e:
+            print("Error occurred during send:", str(e))
 
 server_socket.close()
 print("UDP server stopped")
