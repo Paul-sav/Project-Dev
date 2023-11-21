@@ -126,7 +126,9 @@ while True:
     if message.strip().lower() == 'esp32 discovery':
         udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         udp.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        udp.sendto(str(addr[0]).encode(), ('<broadcast>', UDP_PORT))
+        response_data = str(addr[0]).encode()
+        response_address = ('<broadcast>', UDP_PORT)
+        udp.sendto(response_data, response_address)
 
 server_socket.close()
 print("UDP server stopped")
