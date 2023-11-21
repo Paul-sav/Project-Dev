@@ -127,7 +127,7 @@ while True:
         udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         udp.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         response_data = str(addr[0]).encode()
-        response_address = ('<broadcast>', UDP_PORT)
+        response_address = (addr[0], UDP_PORT)  # Send the response to the sender's IP address
         try:
             udp.sendto(response_data, response_address)
         except Exception as e:
