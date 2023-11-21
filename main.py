@@ -109,6 +109,7 @@ server_socket = setup_udp_server(UDP_PORT)
 
 while True:
     data, addr = server_socket.recvfrom(1024)
+    message = data.decode('utf-8')
     print("Received:", data.decode('utf-8'), "from", addr)
 
     if message.strip() == 'exit':
