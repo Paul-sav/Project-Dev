@@ -114,7 +114,9 @@ while True:
 
     if message.strip() == 'exit':
         break
-
+    if message.strip().lower() == 'esp32 discovery':  # Filter out the discovery message
+        continue
+        
     command = message.strip().lower()
     command_function = command_functions.get(command)
     if command_function:
