@@ -9,7 +9,7 @@ def handle_command(command):
         command = command.decode('utf-8').strip().lower()  # Decode bytes to string and normalize
 
     if command == 'esp32 discovery':
-        # Get the ESP32 unique ID
+        print("Received ESP32 Discovery command")  # Print to confirm the command received
         esp32_unique_id = machine.unique_id()
         esp32_unique_id_hex = ''.join('{:02x}'.format(x) for x in esp32_unique_id)
         print("Sending ESP32 Unique ID:", esp32_unique_id_hex)  # Print the unique ID before sending
