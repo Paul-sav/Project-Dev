@@ -1,2 +1,5 @@
-WIFI_SSID = 'Pixel'
-WIFI_PASS = 'lmaolmao'
+WIFI_SSID = 'Gucci2'
+WIFI_PASS = '11111111'
+
+IP_ADDRESS = None
+NETMASK = None

@@ -30,7 +30,9 @@ while not sta_if.isconnected() and timeout > 0:
 
 if sta_if.isconnected():
     print("Connected to Wi-Fi")
-
+    ip_address, netmask, _, _ = sta_if.ifconfig()
+    config.IP_ADDRESS = ip_address  # Store the IP address in the config module
+    config.NETMASK = netmask  # Store the netmask in the config module
 
     # Function to download code from GitHub
     def download_code(url):
