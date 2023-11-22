@@ -11,15 +11,16 @@ def handle_command(command):
     if command == 'esp32 discovery':
         response = str(machine.unique_id(), 'utf-8')
         server_socket.sendto(response.encode(), ('<broadcast>', UDP_PORT))
-    elif command == b'exit':
+    elif command == 'exit':
         global server_running
         server_running = False
     else:
-        command_function = command_functions.get(command)
-        if command_function:
-            command_function()
-        else:
-            print("Unknown command")
+        if command != 'esp32 discovery':  # Skip processing for discovery message
+            command_function = command_functions.get(command)
+            if command_function:
+                command_function()
+            else:
+                print("Unknown command")
 
 
 def setup_udp_server(port):
