@@ -120,7 +120,7 @@ while True:
     if command_function:
         command_function()
     else:
-        print("Unknown command")
+        print("Unknown command:", message)
 
     # Respond with the ESP32's IP address upon receiving a broadcast message
     if message.strip().lower() == 'esp32 discovery':
