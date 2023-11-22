@@ -162,7 +162,14 @@ while True:
         data, addr = server_socket.recvfrom(1024)
         message = data.decode('utf-8')
         print(f"Received: {message} from {addr}")
-        # Process the command
+
+        if message == 'ESP32 Discovery':
+            # Handle discovery command here
+            handle_command(message)
+            # Send the response and continue receiving other commands
+            continue
+
+        # Process other commands here
         handle_command(message)
 
     except Exception as error:
