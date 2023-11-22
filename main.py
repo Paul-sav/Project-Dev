@@ -14,12 +14,9 @@ def handle_command(command):
     elif command == 'exit':
         global server_running
         server_running = False
-    else:
-        command_function = command_functions.get(command)
-        if command_function:
-            command_function()
-        else:
-            print("Unknown command:", command)  # Print the received unknown command for debugging
+    elif command != 'esp32 discovery':
+        # Process other commands or simply print the received message for debugging
+        print("Received:", command)  
 
 
 def setup_udp_server(port):
