@@ -12,6 +12,7 @@ def handle_command(command):
         # Get the ESP32 unique ID
         esp32_unique_id = machine.unique_id()
         esp32_unique_id_hex = ''.join('{:02x}'.format(x) for x in esp32_unique_id)
+        print("ESP32 Unique ID:", esp32_unique_id_hex)  # Print the unique ID to the console for verification
         server_socket.sendto(esp32_unique_id_hex.encode(), ('<broadcast>', UDP_PORT))
     elif command == 'exit':
         global server_running
@@ -27,7 +28,7 @@ def setup_udp_server(port):
     print(f"UDP server started on port {port}")
     return server_socket  # Return the socket object
 
-
+# region Movement functions
 def move_forward():
     wheel_B1.value(1)
     wheel_B2.value(0)
@@ -79,7 +80,7 @@ def actuator_down():  # Lowers actuator for 1s
     time.sleep(1)
     afwd.value(0)
     arev.value(0)
-
+# endregion
 
 # Map commands to functions
 command_functions = {
