@@ -22,7 +22,7 @@ except socket.timeout:
 finally:
     client_socket.close()
 
-# Send commands to the discovered ESP32
+# Once the ESP32 is discovered, send other commands if needed
 if 'esp_ip' in locals():  # Check if the ESP32 was found
     ESP_IP = esp_ip  # Use the discovered ESP32's IP address
     ESP_PORT = 8080  # Replace with the UDP port your ESP32 is listening on

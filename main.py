@@ -15,12 +15,11 @@ def handle_command(command):
         global server_running
         server_running = False
     else:
-        if command != 'esp32 discovery':  # Skip processing for discovery message
-            command_function = command_functions.get(command)
-            if command_function:
-                command_function()
-            else:
-                print("Unknown command")
+        command_function = command_functions.get(command)
+        if command_function:
+            command_function()
+        else:
+            print("Unknown command:", command)  # Print the received unknown command for debugging
 
 
 def setup_udp_server(port):
