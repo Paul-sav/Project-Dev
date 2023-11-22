@@ -134,5 +134,8 @@ while server_running:
     # Process the command
     handle_command(message)
 
+    # Ensure the server keeps running even if the loop doesn't continue immediately
+    time.sleep(0.1)
+
 server_socket.close()
 print("UDP server stopped")
