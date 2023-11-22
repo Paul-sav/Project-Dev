@@ -6,8 +6,8 @@ import socket
 
 def handle_command(command):
     if command.strip().lower() == 'esp32 discovery':
-        response = machine.unique_id()
-        server_socket.sendto(response, ('<broadcast>', UDP_PORT))
+        response = str(machine.unique_id(), 'utf-8')
+        server_socket.sendto(response.encode(), ('<broadcast>', UDP_PORT))
     elif command.strip().lower() == 'exit':
         global server_running
         server_running = False
