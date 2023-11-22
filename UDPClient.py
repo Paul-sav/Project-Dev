@@ -12,7 +12,9 @@ client_socket.settimeout(5)  # Set a timeout to wait for replies
 try:
     while True:
         data, addr = client_socket.recvfrom(1024)
-        esp_ip = data.decode()
+        esp_ip = data.decode('utf-8')
+        if esp_ip.startswith("b'"):  # Check for the 'b' prefix indicating bytes literal
+            esp_ip = esp_ip[2:-1]  # Remove the 'b' and single quotes
         print(f"ESP found at: {esp_ip}")
         break  # Once a reply is received, stop listening
 except socket.timeout:
