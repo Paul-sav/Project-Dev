@@ -5,14 +5,14 @@ import socket
 
 
 def handle_command(command):
-    if command == 'ESP32 Discovery':
+    if command == b'ESP32 Discovery':
         response = str(machine.unique_id(), 'utf-8')  # Respond with the ESP's unique ID
         server_socket.sendto(response.encode(), ('<broadcast>', UDP_PORT))
-    elif command == 'exit':
+    elif command == b'exit':
         global server_running
         server_running = False
     else:
-        command_functions.get(command, lambda: print("Unknown command"))()
+        command_functions.get(command.decode('utf-8'), lambda: print("Unknown command"))()
 
 
 def setup_udp_server(port):
