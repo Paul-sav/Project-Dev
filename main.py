@@ -9,23 +9,16 @@ def handle_command(command):
         command = command.decode('utf-8').strip().lower()  # Decode bytes to string and normalize
 
     if command == 'esp32 discovery':
-        # Generate a unique ID for the ESP32
-        esp_id = str(machine.unique_id(), 'utf-8')
-
-        # Send the unique ID back to the client
-        response_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        response_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        response_socket.sendto(esp_id.encode(), ('<broadcast>', UDP_PORT))
-
+        # Get the ESP32 unique ID
+        esp32_unique_id = machine.unique_id()
+        esp32_unique_id_hex = ''.join('{:02x}'.format(x) for x in esp32_unique_id)
+        server_socket.sendto(esp32_unique_id_hex.encode(), ('<broadcast>', UDP_PORT))
     elif command == 'exit':
         global server_running
         server_running = False
     else:
-        command_function = command_functions.get(command)
-        if command_function:
-            command_function()
-        else:
-            print("Unknown command")
+        # Process other commands or simply print the received message for debugging
+        print("Received:", command)
 
 
 def setup_udp_server(port):
