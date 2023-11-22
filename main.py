@@ -5,10 +5,11 @@ import socket
 
 
 def handle_command(command):
-    if command.strip().lower() == 'esp32 discovery':
+    command = command.decode('utf-8').strip().lower()  # Decode bytes to string and normalize
+    if command == 'esp32 discovery':
         response = str(machine.unique_id(), 'utf-8')
         server_socket.sendto(response.encode(), ('<broadcast>', UDP_PORT))
-    elif command.strip().lower() == 'exit':
+    elif command == 'exit':
         global server_running
         server_running = False
     else:
