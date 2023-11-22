@@ -5,19 +5,14 @@ import socket
 
 
 def handle_command(command):
-    try:
-        command = command.decode('utf-8')  # Decode the command from bytes to string
-        # Implement your command handling logic here
-        if command == 'ESP32 Discovery':
-            response = str(machine.unique_id(), 'utf-8')  # Respond with the ESP's unique ID
-            server_socket.sendto(response.encode(), ('<broadcast>', UDP_PORT))
-        elif command == 'exit':
-            global server_running
-            server_running = False
-        else:
-            command_functions.get(command, lambda: print("Unknown command"))()
-    except UnicodeError:
-        print("Error decoding the command")
+    if command == 'ESP32 Discovery':
+        response = str(machine.unique_id(), 'utf-8')  # Respond with the ESP's unique ID
+        server_socket.sendto(response.encode(), ('<broadcast>', UDP_PORT))
+    elif command == 'exit':
+        global server_running
+        server_running = False
+    else:
+        command_functions.get(command, lambda: print("Unknown command"))()
 
 
 def setup_udp_server(port):
