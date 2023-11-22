@@ -13,7 +13,8 @@ def handle_command(command):
         esp32_unique_id = machine.unique_id()
         esp32_unique_id_hex = ''.join('{:02x}'.format(x) for x in esp32_unique_id)
         print("Sending ESP32 Unique ID:", esp32_unique_id_hex)  # Print the unique ID before sending
-        server_socket.sendto(esp32_unique_id_hex.encode(), ('<broadcast>', UDP_PORT))
+        # Comment out this line temporarily to isolate the ID generation
+        # server_socket.sendto(esp32_unique_id_hex.encode(), ('<broadcast>', UDP_PORT))
     elif command == 'exit':
         global server_running
         server_running = False
