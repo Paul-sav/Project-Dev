@@ -4,6 +4,18 @@ import time
 import socket
 
 
+def handle_command(command):
+    # Implement your command handling logic here
+    if command == 'ESP32 Discovery':
+        response = str(machine.unique_id(), 'utf-8')  # Respond with the ESP's unique ID
+        server_socket.sendto(response.encode(), ('<broadcast>', UDP_PORT))
+    elif command == 'exit':
+        global server_running
+        server_running = False
+    else:
+        command_functions.get(command, lambda: print("Unknown command"))()
+
+
 def setup_udp_server(port):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_socket.bind(('0.0.0.0', port))  # Bind to all available interfaces
@@ -107,33 +119,15 @@ wheel_stby.value(1)
 UDP_PORT = 8080
 server_socket = setup_udp_server(UDP_PORT)
 
-while True:
+server_running = True
+
+while server_running:
     data, addr = server_socket.recvfrom(1024)
     message = data.decode('utf-8')
-    print("Received:", data.decode('utf-8'), "from", addr)
+    print(f"Received: {message} from {addr}")
 
-    if message.strip() == 'exit':
-        break
-    if message.strip().lower() == 'esp32 discovery':  # Filter out the discovery message
-        continue
-        
-    command = message.strip().lower()
-    command_function = command_functions.get(command)
-    if command_function:
-        command_function()
-    else:
-        print("Unknown command:", message)
-
-    # Respond with the ESP32's IP address upon receiving a broadcast message
-    if message.strip().lower() == 'esp32 discovery':
-        udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        udp.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        response_data = str(addr[0]).encode()
-        response_address = (addr[0], UDP_PORT)  # Send the response to the sender's IP address
-        try:
-            udp.sendto(response_data, response_address)
-        except Exception as e:
-            print("Error occurred during send:", str(e))
+    # Process the command
+    handle_command(message)
 
 server_socket.close()
 print("UDP server stopped")

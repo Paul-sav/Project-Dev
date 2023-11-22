@@ -33,7 +33,6 @@ if 'esp_ip' in locals():  # Check if the ESP32 was found
         client_socket.sendto(command.encode(), (ESP_IP, ESP_PORT))
         print(f"Sent: {command}")
 
-
     # Send commands after Enter is pressed
     while True:
         user_input = input("Enter a command: ")
