@@ -1,5 +1,5 @@
 WIFI_SSID = 'Pixel'
 WIFI_PASS = 'lmaolmao'
 
-IP_ADDRESS = ''
-NETMASK = ''
+IP_ADDRESS = '192.168.108.39'
+NETMASK = '255.255.255.0'

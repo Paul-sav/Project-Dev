@@ -9,7 +9,7 @@ def send_command(command, client_socket, esp_ip, esp_port):
         print("Error sending command:", error)
 
 BROADCAST_PORT = 8080
-BROADCAST_ADDRESS = '10.0.0.255'
+BROADCAST_ADDRESS = '192.168.108.255'
 
 def discover_esp():
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -23,7 +23,7 @@ def discover_esp():
     try:
         while True:
             # data, addr = client_socket.recvfrom(1024)
-            esp_ip = '10.0.0.27'  # Update the IP from the received address
+            esp_ip = '192.168.108.39'  # Update the IP from the received address
             print(f"ESP found at: {esp_ip}")
 
             # Perform subsequent communication with ESP here

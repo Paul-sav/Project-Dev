@@ -145,6 +145,14 @@ def setup_udp_server(port):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_socket.bind(('0.0.0.0', port))  # Bind to all available interfaces
     print(f"UDP server started on port {port}")
+    afwd.value(1)  # Raises actuator for 500ms to show it started the server
+    arev.value(0)
+    time.sleep(0.5)
+    afwd.value(0)
+    arev.value(1)
+    time.sleep(0.5)
+    afwd.value(0)
+    arev.value(0)
     return server_socket  # Return the socket object
 
 
