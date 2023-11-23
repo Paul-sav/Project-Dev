@@ -13,11 +13,11 @@ arev.value(0)
 # PWM for motor wheels
 wheel_PWM_B = machine.PWM(machine.Pin(25))
 wheel_PWM_B.freq(20000)
-wheel_PWM_B.duty(700)
+wheel_PWM_B.duty(500)
 
 wheel_PWM_A = machine.PWM(machine.Pin(26))
 wheel_PWM_A.freq(20000)
-wheel_PWM_A.duty(650)
+wheel_PWM_A.duty(500)
 
 # Wheel initialization
 wheel_B1 = machine.Pin(12, machine.Pin.OUT)
@@ -75,17 +75,17 @@ def stop_robot():  # Sets all outputs to LOW
     arev.value(0)
 
 
-def actuator_up():  # Raises actuator for 1s
-    afwd.value(0)
-    arev.value(1)
+def actuator_up():  # Raises actuator for 1.3s, any higher risks the supports uncoupling
+    afwd.value(1)
+    arev.value(0)
     time.sleep(1.3)
     afwd.value(0)
     arev.value(0)
 
 
 def actuator_down():  # Lowers actuator for 1s
-    afwd.value(1)
-    arev.value(0)
+    afwd.value(0)
+    arev.value(1)
     time.sleep(2)
     afwd.value(0)
     arev.value(0)
@@ -98,7 +98,7 @@ def speed_up():
 
 
 def speed_down():
-    if wheel_PWM_A.duty() > 400 and wheel_PWM_B.duty() > 400:
+    if wheel_PWM_A.duty() > 300 and wheel_PWM_B.duty() > 300:
         wheel_PWM_A.duty(wheel_PWM_A.duty() - 50)
         wheel_PWM_B.duty(wheel_PWM_B.duty() - 50)
 

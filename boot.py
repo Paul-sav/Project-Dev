@@ -33,16 +33,9 @@ if sta_if.isconnected():
     print("ESP IP address:", esp_config)
     print("Connected to Wi-Fi\n")
 
-    ip_address, netmask, _, _ = esp_config
-    if ip_address and netmask:
-        BROADCAST_ADDRESS = calculate_broadcast_address(ip_address, netmask)
-    else:
-        print("Invalid IP address or netmask")
-
     ip_address, netmask, _, _ = sta_if.ifconfig()
     config.IP_ADDRESS = ip_address  # Store the IP address in the config module
     config.NETMASK = netmask  # Store the netmask in the config module
-
 
     # Function to download code from GitHub
     def download_code(url):
