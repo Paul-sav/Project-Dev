@@ -195,7 +195,7 @@ while True:
             handle_command(command)
             continue
 
-        if message == 'ESP Discovery' and not discovery_handled:
+        if message == 'ESP Discovery' and not discovery_flag:
             print(f"Received: {message} from {addr}")
             send_ip(server_socket, addr)  # Send the ESP IP to the client
             discovery_flag = True  # Set the discovery true
