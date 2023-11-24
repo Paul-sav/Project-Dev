@@ -32,6 +32,7 @@ wheel_stby = machine.Pin(33, machine.Pin.OUT)
 wheel_stby.value(1)
 # endregion
 
+# Gets the IP address and netmask from config
 ip_address = config.IP_ADDRESS
 netmask = config.NETMASK
 UDP_PORT = 8080
@@ -115,7 +116,7 @@ def speed_down():
 def handle_command(command):
     try:
         if isinstance(command, bytes):
-            # Checks if command is in bytes and decodes it
+            # Checks if command is in bytes and decodes it to a lowercase string
             command = command.decode('utf-8').strip().lower()
 
         print("Received command:", command)  # Print the received command
@@ -142,10 +143,10 @@ def handle_command(command):
 
 def calculate_broadcast_address(ip_address, netmask):
     # Finds the broadcast address for the discovery msg
-    parts = list(map(int, ip_address.split('.')))
-    netmask = list(map(int, netmask.split('.')))
-    broadcast = [part | ~netmask[index] & 0xff for index, part in enumerate(parts)]
-    broadcast_address = '.'.join(map(str, broadcast))
+    parts = list(map(int, ip_address.split('.')))  # Split the IP into integers
+    netmask = list(map(int, netmask.split('.')))  # Split the netmask into integers
+    broadcast = [part | ~netmask[index] & 0xff for index, part in enumerate(parts)]  # Bitwise over each part
+    broadcast_address = '.'.join(map(str, broadcast))  # Joins the string
     return broadcast_address
 
 
@@ -168,6 +169,7 @@ def setup_udp_server(port):
 def send_ip(client_socket, client_addr):
     # Send the ESP32's IP address to the discovered client
     ip_message = f"ESP_IP:{config.IP_ADDRESS}"
+    print(f"Sending {ip_message}")
     client_socket.sendto(ip_message.encode(), client_addr)
 
 
@@ -176,24 +178,27 @@ def send_ip(client_socket, client_addr):
 BROADCAST_ADDRESS = calculate_broadcast_address(ip_address, netmask)
 server_socket = setup_udp_server(UDP_PORT)
 
-discovery_handled = False  # Flag to track if discovery command has been handled
+discovery_flag = False  # Flag to track if discovery command has been handled
 
 actuator_flag = False  # Flag to prevent actuator from going up twice
 
 while True:
     try:
         data, addr = server_socket.recvfrom(1024)
-        message = data.decode('utf-8')
+        message = data.decode('utf-8')  # Decodes bytes received to string
 
         if message.startswith('CMD:'):
             command = message[4:]  # Extract the command without the prefix
+            if command == 'stop':  # Closes the server if stop is received
+                break
+
             handle_command(command)
             continue
 
         if message == 'ESP Discovery' and not discovery_handled:
             print(f"Received: {message} from {addr}")
-            send_ip(server_socket, addr)  # Send the ESP32's IP to the discovered client
-            discovery_handled = True  # Set the flag indicating discovery command handled
+            send_ip(server_socket, addr)  # Send the ESP IP to the client
+            discovery_flag = True  # Set the discovery true
 
     except Exception as error:
         print("Exception occurred:", error)
