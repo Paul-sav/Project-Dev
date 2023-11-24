@@ -76,19 +76,24 @@ def stop_robot():  # Sets all outputs to LOW
 
 
 def actuator_up():  # Raises actuator for 1.3s, any higher risks the supports uncoupling
-    afwd.value(1)
-    arev.value(0)
-    time.sleep(1.3)
-    afwd.value(0)
-    arev.value(0)
+    global actuator_flag
+    if not actuator_flag:
+        afwd.value(1)
+        arev.value(0)
+        time.sleep(1.3)
+        afwd.value(0)
+        arev.value(0)
+        actuator_flag = True
 
 
-def actuator_down():  # Lowers actuator for 1s
+def actuator_down():  # Lowers actuator for 2s
+    global actuator_flag
     afwd.value(0)
     arev.value(1)
     time.sleep(2)
     afwd.value(0)
     arev.value(0)
+    actuator_flag = False  # Resets flag
 
 
 def speed_up():
@@ -106,14 +111,16 @@ def speed_down():
 # endregion
 
 
+# region UDP and IP address functions
 def handle_command(command):
     try:
         if isinstance(command, bytes):
+            # Checks if command is in bytes and decodes it
             command = command.decode('utf-8').strip().lower()
 
         print("Received command:", command)  # Print the received command
 
-        commands = {
+        commands = {  # Dictionary for possible commands
             'w': move_forward,
             's': move_backward,
             'a': turn_left,
@@ -134,6 +141,7 @@ def handle_command(command):
 
 
 def calculate_broadcast_address(ip_address, netmask):
+    # Finds the broadcast address for the discovery msg
     parts = list(map(int, ip_address.split('.')))
     netmask = list(map(int, netmask.split('.')))
     broadcast = [part | ~netmask[index] & 0xff for index, part in enumerate(parts)]
@@ -142,6 +150,7 @@ def calculate_broadcast_address(ip_address, netmask):
 
 
 def setup_udp_server(port):
+    # Turns on UDP server
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_socket.bind(('0.0.0.0', port))  # Bind to all available interfaces
     print(f"UDP server started on port {port}")
@@ -156,24 +165,34 @@ def setup_udp_server(port):
     return server_socket  # Return the socket object
 
 
+def send_ip(client_socket, client_addr):
+    # Send the ESP32's IP address to the discovered client
+    ip_message = f"ESP_IP:{config.IP_ADDRESS}"
+    client_socket.sendto(ip_message.encode(), client_addr)
+
+
+# endregion
+
 BROADCAST_ADDRESS = calculate_broadcast_address(ip_address, netmask)
 server_socket = setup_udp_server(UDP_PORT)
 
 discovery_handled = False  # Flag to track if discovery command has been handled
 
+actuator_flag = False  # Flag to prevent actuator from going up twice
+
 while True:
     try:
         data, addr = server_socket.recvfrom(1024)
         message = data.decode('utf-8')
-        # print(f"Received: {message} from {addr}")
 
         if message.startswith('CMD:'):
             command = message[4:]  # Extract the command without the prefix
             handle_command(command)
             continue
 
-        if message == 'ESP32 Discovery' and not discovery_handled:
-            handle_command(message)
+        if message == 'ESP Discovery' and not discovery_handled:
+            print(f"Received: {message} from {addr}")
+            send_ip(server_socket, addr)  # Send the ESP32's IP to the discovered client
             discovery_handled = True  # Set the flag indicating discovery command handled
 
     except Exception as error:

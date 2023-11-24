@@ -24,6 +24,7 @@ sta_if.connect(config.WIFI_SSID, config.WIFI_PASS)
 # region Connecting to Wi-Fi and parsing GitHub repo
 # Wait for Wi-Fi connection (5 sec timeout)
 timeout = 5
+
 while not sta_if.isconnected() and timeout > 0:
     time.sleep(1)
     timeout -= 1
