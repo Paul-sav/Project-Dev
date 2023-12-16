@@ -189,7 +189,7 @@ while True:
 
         if message.startswith('CMD:'):
             command = message[4:]  # Extract the command without the prefix
-            if command == 'exit':  # Closes the server if stop is received
+            if command == 'l':  # Closes the server if stop is received
                 break
 
             handle_command(command)
