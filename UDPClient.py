@@ -35,6 +35,7 @@ def discover_esp():
                 while True:  # Allows user to input commands after connecting
                     user_input = input("Enter a command: ")
                     if user_input.lower() == 'exit':
+                        send_command(user_input, client_socket, esp_ip, ESP_PORT)
                         break  # Exit loop on 'exit' command
                     send_command(user_input, client_socket, esp_ip, ESP_PORT)
                 break
