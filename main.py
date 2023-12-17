@@ -37,7 +37,7 @@ wheel_stby.value(1)
 # Access Point Settings
 UDP_PORT = 8080
 AP_SSID = "Pallet Robot"
-AP_PASS = "12345"
+AP_PASS = "password"
 
 # Disables WiFi and enables Access Point
 sta_if = network.WLAN(network.STA_IF)
