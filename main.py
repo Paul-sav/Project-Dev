@@ -44,7 +44,7 @@ sta_if = network.WLAN(network.STA_IF)
 sta_if.active(False)
 sta_ap = network.WLAN(network.AP_IF)
 sta_ap.active(True)
-sta_ap.config(essid=AP_PASS, password=AP_PASS, authmode=network.AUTH_WPA2_PSK, hidden=False)
+sta_ap.config(essid=AP_SSID, password=AP_PASS, authmode=network.AUTH_WPA2_PSK, hidden=False)
 ap_ip = sta_ap.ifcongif()[0]
 ap_broadcast = ap_ip[:ap_ip.rfind('.')] + '.255'
 # endregion
