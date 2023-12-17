@@ -1,7 +1,7 @@
 import socket
 
 BROADCAST_PORT = 8080  # Replace with the actual port
-BROADCAST_ADDRESS = '192.168.108.255'  # Replace with current broadcast address
+BROADCAST_ADDRESS = '192.168.4.255'  # Replace with current broadcast address
 
 
 def send_command(command, client_socket, esp_ip, esp_port):  # Sends command to ESP
