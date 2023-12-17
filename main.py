@@ -2,6 +2,7 @@ import config
 import machine
 import time
 import socket
+import network
 
 # region Pin initialization
 # Actuator initialization
@@ -32,10 +33,21 @@ wheel_stby = machine.Pin(33, machine.Pin.OUT)
 wheel_stby.value(1)
 # endregion
 
-# Gets the IP address and netmask from config
-ip_address = config.IP_ADDRESS
-netmask = config.NETMASK
+# region WiFi settings
+# Access Point Settings
 UDP_PORT = 8080
+AP_SSID = "Pallet Robot"
+AP_PASS = "12345"
+
+# Disables WiFi and enables Access Point
+sta_if = network.WLAN(network.STA_IF)
+sta_if.active(False)
+sta_ap = network.WLAN(network.AP_IF)
+sta_ap.active(True)
+sta_ap.config(essid=AP_PASS, password=AP_PASS)
+ap_ip = sta_ap.ifcongif()[0]
+ap_broadcast = ap_ip[:ap_ip.rfind('.')] + '.255'
+# endregion
 
 
 # region Movement functions
@@ -141,19 +153,10 @@ def handle_command(command):
         print("Exception occurred:", error)
 
 
-def calculate_broadcast_address(ip_address, netmask):
-    # Finds the broadcast address for the discovery msg
-    parts = list(map(int, ip_address.split('.')))  # Split the IP into integers
-    netmask = list(map(int, netmask.split('.')))  # Split the netmask into integers
-    broadcast = [part | ~netmask[index] & 0xff for index, part in enumerate(parts)]  # Bitwise over each part
-    broadcast_address = '.'.join(map(str, broadcast))  # Joins the string
-    return broadcast_address
-
-
-def setup_udp_server(port):
+def setup_udp_server(port, ip_address):
     # Turns on UDP server
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    server_socket.bind(('0.0.0.0', port))  # Bind to all available interfaces
+    server_socket.bind((ip_address, port))  # Bind to all available interfaces
     print(f"UDP server started on port {port}")
     afwd.value(1)  # Raises actuator for 500ms to show it started the server
     arev.value(0)
@@ -166,17 +169,16 @@ def setup_udp_server(port):
     return server_socket  # Return the socket object
 
 
-def send_ip(client_socket, client_addr):
+def send_ip(client_socket, client_addr, broadcast):
     # Send the ESP32's IP address to the discovered client
-    ip_message = f"ESP_IP:{config.IP_ADDRESS}"
+    ip_message = f"ESP_IP:{ap_ip}"
     print(f"Sending {ip_message}")
-    client_socket.sendto(ip_message.encode(), client_addr)
+    client_socket.sendto(ip_message.encode(), (broadcast, UDP_PORT))
 
 
 # endregion
 
-BROADCAST_ADDRESS = calculate_broadcast_address(ip_address, netmask)
-server_socket = setup_udp_server(UDP_PORT)
+server_socket = setup_udp_server(UDP_PORT, ap_ip)
 
 discovery_flag = False  # Flag to track if discovery command has been handled
 
@@ -197,7 +199,7 @@ while True:
 
         if message == 'ESP Discovery' and not discovery_flag:
             print(f"Received: {message} from {addr}")
-            send_ip(server_socket, addr)  # Send the ESP IP to the client
+            send_ip(server_socket, addr, ap_broadcast)  # Send the ESP IP to the client
             discovery_flag = True  # Set the discovery true
 
     except Exception as error:
