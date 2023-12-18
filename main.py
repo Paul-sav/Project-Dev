@@ -1,4 +1,3 @@
-import config
 import machine
 import time
 import socket
@@ -119,13 +118,11 @@ def speed_down():
     if wheel_PWM_A.duty() > 300 and wheel_PWM_B.duty() > 300:
         wheel_PWM_A.duty(wheel_PWM_A.duty() - 50)
         wheel_PWM_B.duty(wheel_PWM_B.duty() - 50)
-
-
 # endregion
 
 
 # region UDP and IP address functions
-def handle_command(command):
+def handle_command(command):  # Decides what to do with commands received
     try:
         if isinstance(command, bytes):
             # Checks if command is in bytes and decodes it to a lowercase string
@@ -178,10 +175,8 @@ def send_ip(client_socket, client_addr, broadcast):
 
 # endregion
 
-server_socket = setup_udp_server(UDP_PORT, ap_ip)
-
+server_socket = setup_udp_server(UDP_PORT, ap_ip)  # Starts UDP server
 discovery_flag = False  # Flag to track if discovery command has been handled
-
 actuator_flag = False  # Flag to prevent actuator from going up twice
 
 while True:
@@ -191,7 +186,7 @@ while True:
 
         if message.startswith('CMD:'):
             command = message[4:]  # Extract the command without the prefix
-            if command == 'l':  # Closes the server if stop is received
+            if command == 'l':  # Closes the server if l is received
                 break
 
             handle_command(command)
